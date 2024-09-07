@@ -1,10 +1,10 @@
 <?php
 // Configuration des routes
 $routes = [
-    '' => ['file' => 'home.php', 'title' => 'Accueil'],
-    'page1' => ['file' => 'page1.php', 'title' => 'Page 1'],
-    'page2' => ['file' => 'page2.php', 'title' => 'Page 2'],
-    'contact' => ['file' => 'contact.php', 'title' => 'Contact'],
+    '' => ['file' => 'home.php'],
+    'page1' => ['file' => 'page1.php'],
+    'page2' => ['file' => 'page2.php'],
+    'contact' => ['file' => 'contact.php'],
 ];
 
 // Fonction pour obtenir la route actuelle
