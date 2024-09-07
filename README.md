@@ -1,3 +1,4 @@
 Router for HTMX
 
-## Attention de bien créer home and 404
+⚠️ **Warning:** Please create a 404 page and a home page for it to work.
+
