@@ -19,7 +19,7 @@ $currentRoute = getCurrentRoute();
 // Vérifier si la route existe, sinon utiliser la page 404
 if (!isset($routes[$currentRoute])) {
     $currentRoute = '404';
-    $routes[$currentRoute] = ['file' => '404.php', 'title' => 'Page non trouvée'];
+    $routes[$currentRoute] = ['file' => '404.php'];
     http_response_code(404);
 } else {
     http_response_code(200);
