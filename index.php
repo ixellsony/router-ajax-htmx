@@ -1,43 +1,30 @@
 <?php
 // Configuration des routes
 $routes = [
-    '' => ['file' => 'home.php'],
-    'page1' => ['file' => 'page1.php'],
-    'page2' => ['file' => 'page2.php'],
-    'contact' => ['file' => 'contact.php'],
+    '' => 'home.php',
+    'page1' => 'page1.php',
+    'page2' => 'page2.php',
+    'contact' => 'contact.php',
 ];
 
-// Fonction pour obtenir la route actuelle
-function getCurrentRoute() {
-    $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-    return $path === '' ? '' : $path;
-}
-
 // Obtenir la route actuelle
-$currentRoute = getCurrentRoute();
+$currentRoute = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 // Vérifier si la route existe, sinon utiliser la page 404
 if (!isset($routes[$currentRoute])) {
     $currentRoute = '404';
-    $routes[$currentRoute] = ['file' => '404.php'];
+    $routes[$currentRoute] = '404.php';
     http_response_code(404);
-} else {
-    http_response_code(200);
 }
 
-// Vérifier si c'est une requête HTMX
-$isHtmxRequest = isset($_SERVER['HTTP_HX_REQUEST']);
-
-// Fonction pour générer le contenu
-function generateContent($file) {
-    ob_start();
-    include $file;
-    return ob_get_clean();
-}
+// Générer le contenu
+ob_start();
+include $routes[$currentRoute];
+$content = ob_get_clean();
 
 // Si c'est une requête HTMX, renvoyer seulement le contenu
-if ($isHtmxRequest) {
-    echo generateContent($routes[$currentRoute]['file']);
+if (isset($_SERVER['HTTP_HX_REQUEST'])) {
+    echo $content;
     exit;
 }
 
@@ -54,10 +41,10 @@ if ($isHtmxRequest) {
 <body>
     <nav>
         <a href="/" hx-get="/" hx-swap="innerHTML" hx-trigger="click" hx-target="#content" hx-push-url="true">Home</a>
-        <a href="page1" hx-get="page1" hx-swap="innerHTML" hx-trigger="click" hx-target="#content" hx-push-url="true">Page1</a>
+        <a href="/page1" hx-get="/page1" hx-swap="innerHTML" hx-trigger="click" hx-target="#content" hx-push-url="true">Page1</a>
     </nav>
     <div id="content">
-        <?= generateContent($routes[$currentRoute]['file']) ?>
+        <?= $content ?>
     </div>
 </body>
 </html>
