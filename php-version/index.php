@@ -1,8 +1,9 @@
 <?php
 // Configuration des routes
 $routes = [
-    '' => ['file' => 'home.php', 'HTMXOnly' => false],
-    'page1' => ['file' => 'page1.php', 'HTMXOnly' => false],
+    '' => ['file' => 'pages/home.php', 'HTMXOnly' => false],
+    'page1' => ['file' => 'pages/page1.php', 'HTMXOnly' => false],
+    'login' => ['file' => 'pages/login.php', 'HTMXOnly' => false],
 ];
 
 // Page 404
@@ -14,6 +15,18 @@ function handle404() {
 
 // Obtenir la route actuelle
 $currentRoute = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+
+// Vérifier si la route fait partie du dossier 'media'
+if (strpos($currentRoute, 'media/') === 0) {
+    // Si le fichier existe dans le dossier 'media', on le sert directement
+    if (file_exists($currentRoute)) {
+        header('Content-Type: ' . mime_content_type($currentRoute));
+        readfile($currentRoute);
+        exit;
+    } else {
+        handle404();
+    }
+}
 
 // Vérifier si la route existe, sinon utiliser la page 404
 if (!isset($routes[$currentRoute])) {
@@ -38,21 +51,6 @@ if (isset($_SERVER['HTTP_HX_REQUEST'])) {
 
 // Pour les requêtes non-HTMX, afficher la page complète
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My App</title>
-    <script src="https://unpkg.com/htmx.org@latest"></script>
-</head>
-<body>
-    <nav>
-        <a href="/" hx-get="/" hx-swap="innerHTML" hx-trigger="click" hx-target="#content" hx-push-url="true">Home</a>
-        <a href="/page1" hx-get="/page1" hx-swap="innerHTML" hx-trigger="click" hx-target="#content" hx-push-url="true">Page1</a>
-    </nav>
-    <div id="content">
+
+
         <?= $content ?>
-    </div>
-</body>
-</html>
