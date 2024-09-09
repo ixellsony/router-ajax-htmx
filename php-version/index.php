@@ -5,7 +5,7 @@ $routes = [
     'page1' => ['file' => 'page1.php', 'HTMXOnly' => false],
 ];
 
-// Séparation de la logique de page 404
+// Page 404
 function handle404() {
     http_response_code(404);
     include '404.php';
