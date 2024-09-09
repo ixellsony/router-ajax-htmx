@@ -1,4 +1,5 @@
 <?php
+// Configuration des routes
 $routes = [
     '' => ['file' => 'home.php', 'HTMXOnly' => false],
     'page1' => ['file' => 'page1.php', 'HTMXOnly' => false],
