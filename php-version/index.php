@@ -44,7 +44,7 @@ if (isset($_SERVER['HTTP_HX_REQUEST'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My App</title>
-    <script src="https://unpkg.com/htmx.org@latest" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@latest"></script>
 </head>
 <body>
     <nav>
