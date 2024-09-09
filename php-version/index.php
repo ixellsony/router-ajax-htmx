@@ -1,10 +1,7 @@
 <?php
-// Configuration des routes
 $routes = [
-    '' => 'home.php',
-    'page1' => 'page1.php',
-    'page2' => 'page2.php',
-    'contact' => 'contact.php',
+    '' => ['file' => 'home.php', 'HTMXOnly' => false],
+    'page1' => ['file' => 'page1.php', 'HTMXOnly' => false],
 ];
 
 // Obtenir la route actuelle
@@ -13,13 +10,21 @@ $currentRoute = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 // Vérifier si la route existe, sinon utiliser la page 404
 if (!isset($routes[$currentRoute])) {
     $currentRoute = '404';
-    $routes[$currentRoute] = '404.php';
+    $routes[$currentRoute] = ['file' => '404.php', 'HTMXOnly' => false];
+    http_response_code(404);
+}
+
+// Vérifier si la route est marquée HTMXOnly et si la requête provient de HTMX
+if ($routes[$currentRoute]['HTMXOnly'] && !isset($_SERVER['HTTP_HX_REQUEST'])) {
+    // Si c'est une route HTMXOnly mais la requête n'est pas HTMX, renvoyer une erreur 404
+    $currentRoute = '404';
+    $routes[$currentRoute] = ['file' => '404.php', 'HTMXOnly' => false];
     http_response_code(404);
 }
 
 // Générer le contenu
 ob_start();
-include $routes[$currentRoute];
+include $routes[$currentRoute]['file'];
 $content = ob_get_clean();
 
 // Si c'est une requête HTMX, renvoyer seulement le contenu
@@ -35,8 +40,8 @@ if (isset($_SERVER['HTTP_HX_REQUEST'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon App</title>
-    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+    <title>My App</title>
+    <script src="https://unpkg.com/htmx.org@latest" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav>
