@@ -5,22 +5,24 @@ $routes = [
     'page1' => ['file' => 'page1.php', 'HTMXOnly' => false],
 ];
 
+// Séparation de la logique de page 404
+function handle404() {
+    http_response_code(404);
+    include '404.php';
+    exit;
+}
+
 // Obtenir la route actuelle
 $currentRoute = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 // Vérifier si la route existe, sinon utiliser la page 404
 if (!isset($routes[$currentRoute])) {
-    $currentRoute = '404';
-    $routes[$currentRoute] = ['file' => '404.php', 'HTMXOnly' => false];
-    http_response_code(404);
+    handle404();
 }
 
 // Vérifier si la route est marquée HTMXOnly et si la requête provient de HTMX
 if ($routes[$currentRoute]['HTMXOnly'] && !isset($_SERVER['HTTP_HX_REQUEST'])) {
-    // Si c'est une route HTMXOnly mais la requête n'est pas HTMX, renvoyer une erreur 404
-    $currentRoute = '404';
-    $routes[$currentRoute] = ['file' => '404.php', 'HTMXOnly' => false];
-    http_response_code(404);
+    handle404();
 }
 
 // Générer le contenu
